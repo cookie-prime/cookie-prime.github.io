@@ -87,7 +87,12 @@
     transition:opacity .25s;
   }
   a.block:hover::before{opacity:.38;animation-duration:4s}   /* brighten + speed up on hover */
-  .block.blue::before{animation-direction:reverse}          /* vary direction between blocks */
+  .block.blue::before{animation-direction:reverse}
+  /* Per-block wave line colors: matches each block's tint */
+  .block.red::before  {background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='120'><defs><linearGradient id='g' x1='0' x2='1'><stop offset='0' stop-color='%23ff3c5a'/><stop offset='.5' stop-color='%23ff8fa0'/><stop offset='1' stop-color='%23ff3c5a'/></linearGradient></defs><g fill='none' stroke='url(%23g)' stroke-width='1.4'><path d='M0 30 Q60 10 120 30 T240 30'/><path d='M0 60 Q60 80 120 60 T240 60'/><path d='M0 90 Q60 70 120 90 T240 90'/></g></svg>")}
+  .block.blue::before {background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='120'><defs><linearGradient id='g' x1='0' x2='1'><stop offset='0' stop-color='%233c8cff'/><stop offset='.5' stop-color='%238fc2ff'/><stop offset='1' stop-color='%233c8cff'/></linearGradient></defs><g fill='none' stroke='url(%23g)' stroke-width='1.4'><path d='M0 30 Q60 10 120 30 T240 30'/><path d='M0 60 Q60 80 120 60 T240 60'/><path d='M0 90 Q60 70 120 90 T240 90'/></g></svg>")}
+  .block.green::before{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='120'><defs><linearGradient id='g' x1='0' x2='1'><stop offset='0' stop-color='%232ee08a'/><stop offset='.5' stop-color='%239af5c8'/><stop offset='1' stop-color='%232ee08a'/></linearGradient></defs><g fill='none' stroke='url(%23g)' stroke-width='1.4'><path d='M0 30 Q60 10 120 30 T240 30'/><path d='M0 60 Q60 80 120 60 T240 60'/><path d='M0 90 Q60 70 120 90 T240 90'/></g></svg>")}
+          /* vary direction between blocks */
   @keyframes wave-scroll{from{background-position:0 0}to{background-position:240px 0}}
 
   /* ---- Full-page background wave canvas ---- */
