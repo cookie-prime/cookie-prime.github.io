@@ -71,6 +71,31 @@
   .block.blue {--t:#5aa9ff;--rgb:70,140,255}   /* blue team */
   .block.green{--t:#4ee39a;--rgb:60,220,140}   /* walk-throughs */
 
+  /* ---- Synthwave lines scrolling inside each notes block ---- */
+  .block{position:relative;overflow:hidden}
+  .block > *{position:relative;z-index:1}           /* keep text above the waves */
+  .block::before{
+    content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+    /* seamless 240px tile: 3 sine lines with a magenta→purple→cyan gradient stroke */
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='120'><defs><linearGradient id='g' x1='0' x2='1'><stop offset='0' stop-color='%23ff3cac'/><stop offset='.5' stop-color='%237b5cff'/><stop offset='1' stop-color='%2300e5ff'/></linearGradient></defs><g fill='none' stroke='url(%23g)' stroke-width='1.4'><path d='M0 30 Q60 10 120 30 T240 30'/><path d='M0 60 Q60 80 120 60 T240 60'/><path d='M0 90 Q60 70 120 90 T240 90'/></g></svg>") repeat;
+    background-size:240px 120px;
+    opacity:.28;
+    /* fade lines out toward the top so the title stays clean */
+    -webkit-mask-image:linear-gradient(to top,#000 10%,transparent 85%);
+            mask-image:linear-gradient(to top,#000 10%,transparent 85%);
+    animation:wave-scroll 9s linear infinite;
+    transition:opacity .25s;
+  }
+  a.block:hover::before{opacity:.38;animation-duration:4s}   /* brighten + speed up on hover */
+  .block.blue::before{animation-direction:reverse}          /* vary direction between blocks */
+  @keyframes wave-scroll{from{background-position:0 0}to{background-position:240px 0}}
+
+  /* ---- Full-page background wave canvas ---- */
+  #waves{position:fixed;inset:0;width:100%;height:100%;z-index:-1;opacity:.35;pointer-events:none}
+
+  /* Respect users who turn off motion */
+  @media(prefers-reduced-motion:reduce){.block::before{animation:none}}
+
   /* ---- Contact ---- */
   .contact{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:72px}
   .link{display:flex;align-items:center;gap:14px;padding:20px 22px}
@@ -83,6 +108,8 @@
 </style>
 </head>
 <body>
+<!-- Animated synthwave lines drawn behind the whole page -->
+<canvas id="waves" aria-hidden="true"></canvas>
 <div class="wrap">
 
   <!-- Name + one-line descriptor -->
@@ -130,5 +157,42 @@
 
   <footer>© 2026 Calvin Connor</footer>
 </div>
+
+<script>
+/* Background waves: stacked sine lines with a synthwave gradient, drifting slowly */
+(() => {
+  const c = document.getElementById('waves'), x = c.getContext('2d');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches; // draw once if motion is off
+  let w, h, dpr;
+  const size = () => {                       // match canvas to screen, crisp on hi-DPI
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    w = c.width = innerWidth * dpr; h = c.height = innerHeight * dpr;
+  };
+  addEventListener('resize', size); size();
+
+  const LINES = 14;                          // number of wave lines
+  const draw = t => {
+    x.clearRect(0, 0, w, h);
+    const g = x.createLinearGradient(0, 0, w, 0);   // magenta → purple → cyan
+    g.addColorStop(0, '#ff3cac'); g.addColorStop(.5, '#7b5cff'); g.addColorStop(1, '#00e5ff');
+    x.strokeStyle = g; x.lineWidth = 1.2 * dpr;
+    for (let i = 0; i < LINES; i++) {
+      const base = h * (.35 + i * .045);            // stack lines down the lower part of the page
+      const amp  = (18 + i * 3) * dpr;              // lower lines swing wider
+      const k    = .0025 / dpr + i * .00008;        // wavelength
+      const ph   = t * .00035 * (1 + i * .06) + i;  // each line drifts at its own speed
+      x.globalAlpha = .15 + (i / LINES) * .5;       // fade lines in toward the bottom
+      x.beginPath();
+      for (let px = 0; px <= w; px += 6 * dpr) {
+        const y = base + Math.sin(px * k + ph) * amp + Math.sin(px * k * .5 - ph * .7) * amp * .5;
+        px ? x.lineTo(px, y) : x.moveTo(px, y);
+      }
+      x.stroke();
+    }
+    if (!still) requestAnimationFrame(draw);
+  };
+  requestAnimationFrame(draw);
+})();
+</script>
 </body>
 </html>
