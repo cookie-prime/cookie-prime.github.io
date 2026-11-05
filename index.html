@@ -60,6 +60,17 @@
   .block p{color:var(--grey);font-size:14px;margin-top:6px}
   .block .go{font-family:var(--mono);font-size:13px;color:var(--cyan);margin-top:18px}
 
+  /* ---- Per-block tint: sets --t (accent) and --rgb (glass tint) for each notes block ---- */
+  .block{--t:var(--cyan);--rgb:0,229,255;
+    background:linear-gradient(145deg,rgba(var(--rgb),.10),rgba(var(--rgb),.02) 60%),var(--glass);
+    border-color:rgba(var(--rgb),.25)}
+  .block .icon,.block .go{color:var(--t)}
+  a.block:hover{border-color:var(--t);background:linear-gradient(145deg,rgba(var(--rgb),.18),rgba(var(--rgb),.04) 60%),var(--glass);
+    box-shadow:0 12px 40px rgba(var(--rgb),.22),inset 0 1px 0 rgba(255,255,255,.08)}
+  .block.red  {--t:#ff6b7a;--rgb:255,90,110}   /* red team */
+  .block.blue {--t:#5aa9ff;--rgb:70,140,255}   /* blue team */
+  .block.green{--t:#4ee39a;--rgb:60,220,140}   /* walk-throughs */
+
   /* ---- Contact ---- */
   .contact{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:72px}
   .link{display:flex;align-items:center;gap:14px;padding:20px 22px}
@@ -83,17 +94,17 @@
   <!-- Big blocks: one per GitBook notes space -->
   <h2>Notes</h2>
   <div class="notes">
-    <a class="glass block" href="https://cookiez.gitbook.io/red-team">
+    <a class="glass block red" href="https://cookiez.gitbook.io/red-team">
       <div class="icon">&gt;_</div>
       <div><h3>Red Team</h3><p>Offensive tradecraft and command references.</p></div>
       <div class="go">open notes →</div>
     </a>
-    <a class="glass block" href="https://cookiez.gitbook.io/blue-team">
+    <a class="glass block blue" href="https://cookiez.gitbook.io/blue-team">
       <div class="icon">[ ]</div>
       <div><h3>Blue Team</h3><p>Incident handling, forensics and SOC reference.</p></div>
       <div class="go">open notes →</div>
     </a>
-    <a class="glass block" href="https://cookiez.gitbook.io/walk-throughs">
+    <a class="glass block green" href="https://cookiez.gitbook.io/walk-throughs">
       <div class="icon">#!</div>
       <div><h3>Walk-throughs</h3><p>Step-by-step lab and box write-ups.</p></div>
       <div class="go">open notes →</div>
